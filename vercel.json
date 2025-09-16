@@ -1,8 +1,0 @@
-{
-  "version": 2,
-  "routes": [
-    { "src": "/", "dest": "api/teal.py" },
-    { "src": "/approval", "dest": "api/teal.py" },
-    { "src": "/clear", "dest": "api/teal.py" }
-  ]
-}
