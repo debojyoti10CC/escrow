@@ -1,10 +1,4 @@
-from fastapi import FastAPI, Response
-from pyteal import compileTeal, Mode
-
-from smart_contracts.mindpal.payment_escrow import (
-    approval_program,
-    clear_state_program,
-)
+from fastapi import FastAPI, Response, HTTPException
 
 
 app = FastAPI(title="Escrow TEAL API", version="1.0.0")
@@ -17,12 +11,24 @@ def root() -> dict[str, str]:
 
 @app.get("/approval")
 def get_approval_teal(version: int = 8) -> Response:
-    teal = compileTeal(approval_program(), mode=Mode.Application, version=version)
-    return Response(content=teal, media_type="text/plain")
+    try:
+        from pyteal import compileTeal, Mode
+        from smart_contracts.mindpal.payment_escrow import approval_program
+
+        teal = compileTeal(approval_program(), mode=Mode.Application, version=version)
+        return Response(content=teal, media_type="text/plain")
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Failed to compile approval TEAL: {exc}")
 
 
 @app.get("/clear")
 def get_clear_teal(version: int = 8) -> Response:
-    teal = compileTeal(clear_state_program(), mode=Mode.Application, version=version)
-    return Response(content=teal, media_type="text/plain")
+    try:
+        from pyteal import compileTeal, Mode
+        from smart_contracts.mindpal.payment_escrow import clear_state_program
+
+        teal = compileTeal(clear_state_program(), mode=Mode.Application, version=version)
+        return Response(content=teal, media_type="text/plain")
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Failed to compile clear TEAL: {exc}")
 
