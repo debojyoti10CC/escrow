@@ -1,0 +1,1 @@
+from .teal import app as app
